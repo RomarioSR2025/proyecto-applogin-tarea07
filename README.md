@@ -1,68 +1,121 @@
-# CodeIgniter 4 Application Starter
+# 🚀 Proyecto Login con Avatar - CodeIgniter 4
 
-## What is CodeIgniter?
+Este proyecto implementa un **sistema de login y registro de usuarios con avatar opcional** utilizando **CodeIgniter 4**, ideal para ejecutarse en **Laragon** o cualquier entorno con PHP y MySQL.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+---
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+## 📌 Características
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+* Registro de usuarios con:
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+  * Nombre
+  * Correo electrónico
+  * Contraseña (encriptada con `password_hash`)
+  * Avatar opcional (imagen de perfil)
+* Login con validación de credenciales.
+* Pantalla de bienvenida mostrando el avatar del usuario (si existe).
+* Manejo de rutas y controladores en CodeIgniter 4.
 
-## Installation & updates
+---
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+## ⚙️ Requisitos
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+* [Laragon](https://laragon.org/) o entorno con:
 
-## Setup
+  * PHP >= 7.4
+  * MySQL/MariaDB
+  * Composer
+* CodeIgniter 4
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+---
 
-## Important Change with index.php
+## 📂 Instalación
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+1. Clonar o descargar este proyecto en la carpeta `www` de Laragon:
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+   ```bash
+   cd C:\laragon\www
+   git clone https://github.com/tuusuario/miapp.git
+   ```
 
-**Please** read the user guide for a better explanation of how CI4 works!
+2. Instalar dependencias:
 
-## Repository Management
+   ```bash
+   composer install
+   ```
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+3. Crear base de datos en MySQL:
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+   ```sql
+   CREATE DATABASE miapp;
+   USE miapp;
 
-## Server Requirements
+   CREATE TABLE usuarios (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       nombre VARCHAR(100) NOT NULL,
+       email VARCHAR(150) UNIQUE NOT NULL,
+       password VARCHAR(255) NOT NULL,
+       avatar VARCHAR(255) DEFAULT NULL,
+       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   );
+   ```
 
-PHP version 8.1 or higher is required, with the following extensions installed:
+4. Configurar la conexión en `app/Config/Database.php`:
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+   ```php
+   public $default = [
+       'hostname' => 'localhost',
+       'username' => 'root',
+       'password' => '',
+       'database' => 'miapp',
+       'DBDriver' => 'MySQLi',
+       'DBDebug'  => (ENVIRONMENT !== 'production'),
+   ];
+   ```
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> - The end of life date for PHP 8.1 will be December 31, 2025.
+---
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+## 📂 Estructura principal
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+```
+app/
+ ├── Controllers/
+ │    └── Usuarios.php   # Controlador de login y registro
+ ├── Models/
+ │    └── UsuarioModel.php
+ ├── Views/
+ │    ├── login.php
+ │    ├── registro.php
+ │    └── bienvenida.php
+public/
+ └── uploads/avatars/    # Carpeta donde se guardan los avatares
+```
+
+---
+
+## 🚀 Uso
+
+1. Iniciar Laragon y abrir en el navegador:
+
+   * Registro: [http://localhost/miapp/public/index.php/usuarios/registro](http://localhost/miapp/public/index.php/usuarios/registro)
+   * Login: [http://localhost/miapp/public/index.php/usuarios/login](http://localhost/miapp/public/index.php/usuarios/login)
+
+2. Registrar un usuario (con o sin avatar).
+
+3. Iniciar sesión con ese usuario.
+
+4. Ver pantalla de bienvenida y avatar.
+
+---
+
+## ✅ Notas
+
+* Los avatares se guardan en la carpeta `public/uploads/avatars`.
+* El campo avatar en la base de datos puede ser `NULL`.
+* Se recomienda configurar **.env** con la base de datos en lugar de editar `Database.php` directamente.
+
+---
+
+## 📄 Licencia
+
+Este proyecto es libre para uso educativo y de prueba.
